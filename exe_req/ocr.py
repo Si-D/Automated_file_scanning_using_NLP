@@ -27,7 +27,6 @@ from datetime import timedelta
 from datetime import datetime
 
 #function to perform ocr
-
 def ocr(path,nop=0):
     PDF_file = path
     pages = convert_from_path(PDF_file, 500) 
@@ -112,8 +111,8 @@ def suite(text):
 def pred2(paths,text):
     text = text.strip()
     new_text = text
-    mod_path1=Path(paths[0])
-    mod_path2=Path(paths[1])
+    mod_path1=paths[0]
+    mod_path2=paths[1]
     model = spacy.load(mod_path1)
     model1 = spacy.load(mod_path2)
     #model = nlp
@@ -274,6 +273,7 @@ l = Label(root, text = "Automated text extraction")
 def open_file(): 
     file = askopenfile(mode ='r', filetypes =[('PDF Files', '*.pdf')]) 
     path = ""
+    print("Enter the Path of the Output CSV file.")
     #print(file.name)
     for i in range(len(file.name)):
         if file.name[i] == '/':
@@ -284,22 +284,49 @@ def open_file():
     print("Applying OCR....")
     output_text = ocr(path)
     output_text = space_text(output_text)
+    
     print("OCR completed....")
     print("Applying NLP....")
-    paths = ["model_9","model_6"]
-    output = pred2(paths,output_text)
-    print("NLP completed...")
-    print("CSV filling...")
-    fill2("./outputs/sample2.csv",output)
-    print("Process completed...")
+    print("Enter the model 1's path and model 2's path to proceed")
+    getpaths(output_text)
     
     
 #     if file is not None: 
 #         content = file.read() 
 #         print(content) 
+Model_var1=StringVar() 
+Model_var2=StringVar() 
+output_var=StringVar()
+l.pack()
+Model1_label = Label(root, text = 'Path of the Model 1:',font=('calibre', 10, 'bold'))
+Model1_Entry= Entry(root,textvariable = Model_var1,font=('calibre',10,'normal')) 
+Model2_label = Label(root, text = 'Path of the Model 2:',font=('calibre', 10, 'bold'))
+Model2_Entry= Entry(root,textvariable = Model_var2,font=('calibre',10,'normal'))
+Output_Label= Label(root,text="Path of the folder where you want the Output CSV file: ",font=('calibre',10,'bold')) 
+Output_Entry= Entry(root,textvariable = output_var,font=('calibre',10,'normal'))
+l.pack()
 l.pack()
 btn = Button(root, text ='Open', command = lambda:open_file()) 
 btn.pack(side = TOP, pady = 10) 
 l.pack()
+def getpaths(output_text):
+    for i,j,k in Model_var1,Model_var2,output_var:
+        if i=='/':
+            i='\\'
+        if j=='/':
+            j='\\' 
+        if k=='/':
+            k='\\'       
+
+    paths = [Model_var1,Model_var2]
+    output = pred2(paths,output_text)
+    print("NLP completed...")
+    csvpath(output,output_var)
+
+def csvpath(output,output_var):   
+
+    fill2(output_var,output)
+    print("CSV filling...")
+    print("Process completed...")
   
 root.mainloop() 

@@ -267,7 +267,7 @@ def fill2(path,dic):
 
 
 
-root = Tkinter.Tk() 
+root = tkinter.Tk() 
 root.geometry('500x500') 
 T = Text(root, height = 10, width = 52) 
 l = Label(root, text = "Automated text extraction") 

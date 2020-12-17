@@ -267,27 +267,34 @@ def fill2(path,dic):
 
 
 root = Tk() 
+root.title('Project OCR')
 root.geometry('500x500') 
 T = Text(root, height = 10, width = 52) 
-l = Label(root, text = "Automated text extraction") 
+l = Label(root, text = "Automated text extraction",font=('Times New Roman',15,'bold')) 
 def open_file(): 
     file = askopenfile(mode ='r', filetypes =[('PDF Files', '*.pdf')]) 
     path = ""
-    print("Enter the Path of the Output CSV file.")
-    #print(file.name)
+    
     for i in range(len(file.name)):
         if file.name[i] == '/':
             path = path + "\\"
         else:
             path = path + file.name[i]
     print(path)
-    print("Applying OCR....")
+    ourMessage ="Applying OCR...."
+    messageVar = Message(root, text = ourMessage) 
+    messageVar.config(bg='lightgreen') 
+    messageVar.pack( ) 
     output_text = ocr(path)
     output_text = space_text(output_text)
-    
-    print("OCR completed....")
-    print("Applying NLP....")
-    print("Enter the model 1's path and model 2's path to proceed")
+    Ocrmessage="OCR completed...."
+    mess1=Message(root,text=Ocrmessage)
+    mess1.config(bg='lightgreen')
+    mess1.pack()
+    nlpmessage="Applying NLP...."
+    mess2=Message(root,text=nlpmessage)
+    mess2.config(bg='light green')
+    mess2.pack()
     getpaths(output_text)
     
     
@@ -304,11 +311,21 @@ Model2_label = Label(root, text = 'Path of the Model 2:',font=('calibre', 10, 'b
 Model2_Entry= Entry(root,textvariable = Model_var2,font=('calibre',10,'normal'))
 Output_Label= Label(root,text="Path of the folder where you want the Output CSV file: ",font=('calibre',10,'bold')) 
 Output_Entry= Entry(root,textvariable = output_var,font=('calibre',10,'normal'))
-l.pack()
-l.pack()
+Model1_label.pack()
+Model1_Entry.pack()
+Model2_label.pack()
+Model2_Entry.pack()
+Output_Label.pack()
+Output_Entry.pack()
 btn = Button(root, text ='Open', command = lambda:open_file()) 
 btn.pack(side = TOP, pady = 10) 
 l.pack()
+Geninstr= """ Procedure:
+          1. Enter the Paths of 2 models and Path of the CSV.
+          2. Then click "Open" to select the Input file which is needed to be extracted and filtered."""
+mess20=Message(root,text=Geninstr)
+mess20.config(bg='light blue')
+mess20.pack()
 def getpaths(output_text):
     for i,j,k in Model_var1,Model_var2,output_var:
         if i=='/':
@@ -320,13 +337,22 @@ def getpaths(output_text):
 
     paths = [Model_var1,Model_var2]
     output = pred2(paths,output_text)
-    print("NLP completed...")
+    nlpcont="NLP completed..."
+    mess3=Message(root,text=nlpcont)
+    mess3.config(bg='light green')
+    mess3.pack()
     csvpath(output,output_var)
 
 def csvpath(output,output_var):   
 
     fill2(output_var,output)
-    print("CSV filling...")
-    print("Process completed...")
+    csvmess= "CSV filling..."
+    mess4=Message(root,text=csvmess)
+    mess4.config(bg='light green')
+    mess4.pack()
+    csvmesscp= "Process completed..."
+    mess5=Message(root,text=csvmesscp)
+    mess5.config(bg='light green')
+    mess5.pack()
   
 root.mainloop() 
